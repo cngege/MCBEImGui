@@ -365,7 +365,10 @@ public:
             delete[] frameContext;
         ImGui_ImplDX12_Shutdown();
         ImGui_ImplWin32_Shutdown();
-        ImGui::DestroyContext();
+        // 会导致崩溃 所以注释掉
+        //if(ImGui::GetCurrentContext()) {
+        //    ImGui::DestroyContext(ImGui::GetCurrentContext());
+        //}
     }
 };
 
