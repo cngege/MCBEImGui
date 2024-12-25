@@ -1,5 +1,7 @@
 ﻿add_rules("mode.debug", "mode.release")
 
+add_repositories("cngege-repo https://github.com/cngege/xmake-repo.git update_hookmanager")
+
 add_requires("hookmanager", {configs = {lighthook = true}})
 add_requires("imgui v1.91.6", {configs = {dx11 = true, dx12 = true, win32 = true}})
 
