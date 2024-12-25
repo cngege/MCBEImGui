@@ -10,7 +10,7 @@
 #include "HookManager/HookManager.hpp"
 #include "imgui/imgui_uwp_wndProc.h"
 #include "imgui/appConsole.h"
-#include "JNMYT.h"
+#include "fonts/JNMYT.h"
 #include "utils/signcode.h"
 
 // 原理： 此库方法一个接口，其他DLL通过此接口注册一个函数
