@@ -70,6 +70,13 @@ public:
         if(!addLogCall) {
             addLogCall = getRemoteAddLogCallback();
         }
+
+        // 如果检测到模块卸载则清空函数
+        if(!GetModuleHandleA(DLL)) {
+            regRenderCall = nullptr;
+            unRegRenderCall = nullptr;
+            addLogCall = nullptr;
+        }
     }
 
     /**
