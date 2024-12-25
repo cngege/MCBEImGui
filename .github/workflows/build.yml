@@ -33,7 +33,7 @@ jobs:
         chcp 65001
         
     - run: |
-        xmake f -a x64 -m release -p windows -v -y
+        xmake f -a x64 -m release -p windows -v -y --repo=https://github.com/cngege/xmake-repo.git
 
     - run: |
         xmake -v -y
