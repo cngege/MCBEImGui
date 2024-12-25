@@ -26,6 +26,7 @@ jobs:
     - name: downloadFont
       working-directory: ${{github.workspace}}
       run: |
+        dir include/
         mkdir include/fonts
         Invoke-WebRequest -Uri "https://github.com/cngege/cngege.github.io/releases/download/v0.1-beta.3/JNMYT.h" -OutFile "include/fonts/JNMYT.h"
 
@@ -33,7 +34,7 @@ jobs:
         chcp 65001
         
     - run: |
-        xmake f -a x64 -m release -p windows -v -y --repo=https://github.com/cngege/xmake-repo.git
+        xmake f -a x64 -m release -p windows -v -y
 
     - run: |
         xmake -v -y
