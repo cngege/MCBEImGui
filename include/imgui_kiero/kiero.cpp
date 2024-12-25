@@ -622,10 +622,6 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType) {
 
 void kiero::shutdown() {
     if (g_renderType != RenderType::None) {
-#if KIERO_USE_MINHOOK
-        MH_DisableHook(MH_ALL_HOOKS);
-#endif
-
         ::free(g_methodsTable);
         g_methodsTable = NULL;
         g_renderType = RenderType::None;
@@ -634,7 +630,6 @@ void kiero::shutdown() {
 
 void* kiero::bind2(uint16_t _index, void* _function) {
     void* target = (void*)g_methodsTable[_index];
-
     //auto info = CreateHook(target, _function);
     auto info = HookManager::getInstance()->addHook((uintptr_t)target, _function);
     if (!info->hook()) {
@@ -645,12 +640,8 @@ void* kiero::bind2(uint16_t _index, void* _function) {
 
 void kiero::unbind(uint16_t _index) {
     if (g_renderType != RenderType::None) {
-#if KIERO_USE_MINHOOK
-        MH_DisableHook((void*)g_methodsTable[_index]);
-#else
         auto* instance = HookManager::getInstance()->findHookInstance((uintptr_t)g_methodsTable[_index]);
         if(instance) instance->unhook();
-#endif
     }
 }
 

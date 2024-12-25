@@ -13,10 +13,12 @@ class RegisterRender {
     const LPCSTR DLL = "MCBEImGui.dll";
     const LPCSTR RENDER = "ImGuiRender";
     const LPCSTR UNRENDER = "ImGuiUnRender";
+    const LPCSTR ADDLOG = "ImGuiAddLog";
 
 public:
-    using RenderCALLBACK = void(__stdcall*)(ImGuiIO* io, ImGuiContext* ctx);
-    using RemoteCallBack = void(__stdcall*)(RenderCALLBACK);
+    using RenderFunBACK = void(__stdcall*)(ImGuiIO* io, ImGuiContext* ctx);
+    using RemoteCallBack = void(__stdcall*)(RenderFunBACK);
+    using RemoteAddLogCallBack = void(__stdcall*)(const char*);
 
 public:
     /**
@@ -32,12 +34,13 @@ public:
      * @brief 注册渲染回调
      * @param fun
      */
-    void on(RenderCALLBACK fun){
+    void on(RenderFunBACK fun){
         if(!renderFun) {
             renderFun = fun;
-        }
-        if(renderCall) {
-            renderCall(renderFun);
+
+            if(regRenderCall) {
+                regRenderCall(renderFun);
+            }
         }
     }
 
@@ -45,8 +48,8 @@ public:
      * @brief 移除注册的渲染回调
      */
     void remove() {
-        if(unRenderCall && renderFun) {
-            unRenderCall(renderFun);
+        if(unRegRenderCall && renderFun) {
+            unRegRenderCall(renderFun);
         }
     }
 
@@ -54,36 +57,66 @@ public:
      * @brief 查找远程函数
      */
     void UpdateFind(){
-        if(!renderCall) {
-            renderCall = getRemoteRenderCallback();
-            if(renderCall) {
-                renderCall(renderFun);
+        if(!regRenderCall) {
+            regRenderCall = getRemoteRenderCallback();
+            if(regRenderCall && renderFun) {
+                regRenderCall(renderFun);
             }
         }
 
-        if(!unRenderCall) {
-            unRenderCall = getRemoteUnRenderCallback();
+        if(!unRegRenderCall) {
+            unRegRenderCall = getRemoteUnRenderCallback();
         }
+        if(!addLogCall) {
+            addLogCall = getRemoteAddLogCallback();
+        }
+    }
+
+    /**
+     * @brief 添加日志
+     * @param str 
+     */
+    void AddLog(const char* str) {
+        if(addLogCall) {
+            addLogCall(str);
+        }
+    }
+
+    /**
+     * @brief 添加日志 格式化
+     * @param fmt
+     */
+    void AddLogfmt(const char* fmt, ...) {
+        char buffer[1024];
+        va_list args;
+        va_start(args, fmt);
+        vsnprintf(buffer, sizeof(buffer), fmt, args);
+        va_end(args);
+        AddLog(buffer);
     }
 private:
     RemoteCallBack getRemoteRenderCallback() {
-        if(!renderCall) {
-            auto render_module = GetModuleHandleA(DLL);
-            if(render_module) {
-                return (RemoteCallBack)GetProcAddress(render_module, RENDER);
-            }
+        auto render_module = GetModuleHandleA(DLL);
+        if(render_module) {
+            return (RemoteCallBack)GetProcAddress(render_module, RENDER);
         }
         return NULL;
     }
 
     RemoteCallBack getRemoteUnRenderCallback() {
-        if(!renderCall) {
+        if(!unRegRenderCall) {
             auto render_module = GetModuleHandleA(DLL);
             if(render_module) {
                 return (RemoteCallBack)GetProcAddress(render_module, UNRENDER);
             }
         }
-        return NULL;
+    }
+
+    RemoteAddLogCallBack getRemoteAddLogCallback() {
+        auto render_module = GetModuleHandleA(DLL);
+        if(render_module) {
+            return (RemoteAddLogCallBack)GetProcAddress(render_module, ADDLOG);
+        }
     }
 
     ~RegisterRender() {
@@ -95,13 +128,14 @@ private:
     /**
      * @brief 用于注册到远程进行渲染的函数
      */
-    RenderCALLBACK renderFun = nullptr;
+    RenderFunBACK renderFun = nullptr;
 
     /**
      * @brief 远程函数
      */
-    RemoteCallBack renderCall = nullptr;
-    RemoteCallBack unRenderCall = nullptr;
+    RemoteCallBack regRenderCall = nullptr;
+    RemoteCallBack unRegRenderCall = nullptr;
+    RemoteAddLogCallBack addLogCall = nullptr;
 };
 
 #endif // !MCBE_IMGUI_HEADER

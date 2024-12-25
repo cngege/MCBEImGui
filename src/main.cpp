@@ -64,7 +64,6 @@ void ImGuiRender() {
     if(ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Insert)) {
         ShowConsole = !ShowConsole;
     }
-    
     if(ShowConsole) GetImguiConsole()->Draw("Logger Console:", &ShowConsole);
 
     // 调用回调
@@ -117,7 +116,11 @@ static auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouse
     MouseHookInstance->oriForSign(MouseUpdate)(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
 }
 
-
+/**
+ * @brief 注册渲染回调
+ * @param call 
+ * @return 
+ */
 extern "C" __declspec(dllexport) void __stdcall ImGuiRender(void* call) {
     std::unique_lock<std::shared_mutex> lock(rw_mtx_renderList);
     // 在容器中找，不存在则加
@@ -127,6 +130,10 @@ extern "C" __declspec(dllexport) void __stdcall ImGuiRender(void* call) {
     }
 }
 
+/**
+ * @brief 取消渲染回调
+ * @param call
+ */
 extern "C" __declspec(dllexport) void __stdcall ImGuiUnRender(void* call) {
     std::unique_lock<std::shared_mutex> lock(rw_mtx_renderList);
     // 在容器中找，存在则删
@@ -134,6 +141,14 @@ extern "C" __declspec(dllexport) void __stdcall ImGuiUnRender(void* call) {
     if(it != renderCallList.end()) {
         renderCallList.erase(it);
     }
+}
+
+/**
+ * @brief 添加日志
+ * @param str
+ */
+extern "C" __declspec(dllexport) void __stdcall ImGuiAddLog(const char* str) {
+    GetImguiConsole()->AddLog("%s", str);
 }
 
 

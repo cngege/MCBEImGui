@@ -349,7 +349,6 @@ class ImguiHooks {
 public:
     static void InitImgui() {
         if (kiero::init(kiero::RenderType::D3D12) == kiero::Status::Success) {
-            //logF("Created hook for SwapChain::Present (DX12)!");
             GetImguiConsole()->AddLog("[Info] Created hook for SwapChain::Present (DX12)!");
             oResizeBuffers = (ResizeBuffers)kiero::bind2(145, &HookResizeBuffers);
         }
