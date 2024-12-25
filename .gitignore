@@ -1,0 +1,14 @@
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
+.DS_Store
+
+# vs project
+.vs/
+vsxmake2022/
+CppProperties.json
+
+# font
+src/JNMYT.h
