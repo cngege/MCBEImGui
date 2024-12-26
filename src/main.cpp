@@ -165,7 +165,11 @@ void ImGuiRender() {
     // 遍历其他模块进行渲染
     if(ModuleTag[0]) {
         std::shared_lock<std::shared_mutex> lock(rw_mtx_moduleList);
-        for(auto& mod : allModules) {
+        if(allModules.size() > FirstRenderModle && !allModules[FirstRenderModle].Enable) {
+            FirstRenderModle++;
+        }
+        for(size_t i = FirstRenderModle; i < allModules.size(); i++) {
+            auto& mod = allModules[i];
             if(mod.Enable && mod.hmod && ModuleTag[mod.id] && mod.renderevent) {
                 try {
                     ImGuiIO& io = ImGui::GetIO(); (void)io;
