@@ -111,12 +111,11 @@ private:
     }
 
     RemoteCallBack getRemoteUnRenderCallback() {
-        if(!unRegRenderCall) {
-            auto render_module = GetModuleHandleA(DLL);
-            if(render_module) {
-                return (RemoteCallBack)GetProcAddress(render_module, UNRENDER);
-            }
+        auto render_module = GetModuleHandleA(DLL);
+        if(render_module) {
+            return (RemoteCallBack)GetProcAddress(render_module, UNRENDER);
         }
+        return NULL;
     }
 
     RemoteAddLogCallBack getRemoteAddLogCallback() {
@@ -124,6 +123,7 @@ private:
         if(render_module) {
             return (RemoteAddLogCallBack)GetProcAddress(render_module, ADDLOG);
         }
+        return NULL;
     }
 
     ~RegisterRender() {
