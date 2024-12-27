@@ -51,7 +51,10 @@ static std::vector<ModuleInfo> allModules{};
 // 5. 读写锁 
 static std::shared_mutex rw_mtx_moduleList;
 
-bool ShowConsole = true;
+/**
+ * @brief 是否显示控制台UI
+ */
+bool ShowConsole = false;
 auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8) -> void;
 static HookInstance* MouseHookInstance;
 
@@ -220,7 +223,6 @@ static auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouse
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
-    //DisableThreadLibraryCalls(hModule);//应用程序及其DLL的线程创建与销毁不再对此DLL进行通知
     switch(ul_reason_for_call) {
     case DLL_PROCESS_ATTACH:
         CreateThread(nullptr, NULL, (LPTHREAD_START_ROUTINE)start, hModule, NULL, nullptr);
