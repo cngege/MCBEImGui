@@ -3,7 +3,6 @@
 #include "imgui.h"
 
 #include <psapi.h>
-#include <stdlib.h>
 #include <vector>
 #include <shared_mutex>
 
@@ -24,10 +23,14 @@ int FirstRenderModle = 1;
 
 // 1. 申请 1024字节的内存
 bool ModuleTag[1024] = {false};
-// 2. 置为0x00
- 
-//
+
+/**
+ * @brief ImGui渲染函数 函数类型
+ */
 using RenderCall = void(__stdcall*)(ImGuiIO*, ImGuiContext*/*, void*, int id*/);
+/**
+ * @brief 更新标志指针函数 函数类型
+ */
 using UpdateDataCall = void(__stdcall*)(void*, int id, void*);
 
 // 3. 定义一个结构 存储找到的模块的信息
@@ -42,7 +45,13 @@ struct ModuleInfo
      * @brief 此模块的句柄
      */
     HMODULE hmod = nullptr;
+    /**
+     * @brief 渲染函数
+     */
     RenderCall renderevent = nullptr;
+    /**
+     * @brief 更新标记地址函数
+     */
     UpdateDataCall updateDataevent = nullptr;
 };
 
@@ -114,11 +123,11 @@ static auto start(HMODULE handle)->void {
     IMGUI_CHECKVERSION();
     ImguiHooks::InitImgui();
 
-    //memset(ModuleTag, 0x00, sizeof(ModuleTag));
     ModuleTag[0] = true;
 
     SignCode sign("MouseUpdate");
     sign << "48 8B C4 48 89 58 ? 48 89 68 ? 48 89 70 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 44 0F";
+    sign.AddSignCall("E8 ? ? ? ? 40 B7 01 48 85 DB 74 ? 48");
     if(sign) {
         MouseHookInstance = HookManager::getInstance()->addHook(*sign, MouseUpdate, "MouseUpdate");
         MouseHookInstance->hook();
@@ -163,7 +172,7 @@ void ImGuiRender() {
     if(ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Insert)) {
         ShowConsole = !ShowConsole;
     }
-    if(ShowConsole) GetImguiConsole()->Draw("Logger Console:", &ShowConsole);
+    if(ShowConsole) GetImguiConsole()->Draw("日志控制台", &ShowConsole);
 
     // 遍历其他模块进行渲染
     if(ModuleTag[0]) {
@@ -180,7 +189,7 @@ void ImGuiRender() {
                     mod.renderevent(&io, ctx);
                 }
                 catch(std::runtime_error& e) {
-                    GetImguiConsole()->AddLog("[Error] 模块渲染调用出现异常 %s", std::string(e.what()).c_str());
+                    GetImguiConsole()->AddLog("[Error][MCBEImGui] 模块渲染调用出现异常 %s", std::string(e.what()).c_str());
                 }
             }
         }
