@@ -17,7 +17,7 @@ target("MCImRenderer")
     add_files("include/imgui_kiero/*.cpp")
     add_files("include/utils/mem/*.cpp")
     add_files("include/utils/*.cpp")
-    add_defines("NOMINMAX")
+    add_defines("NOMINMAX", "USE_LIGHTHOOK")
     add_cxflags("/utf-8")
     add_shflags("/NODEFAULTLIB:LIBCMT",{force = true})
     --pdb

@@ -122,20 +122,20 @@ static auto start(HMODULE handle)->void {
 
     IMGUI_CHECKVERSION();
     ImguiHooks::InitImgui();
-
     ModuleTag[0] = true;
 
-    SignCode sign("MouseUpdate");
-    sign << "48 8B C4 48 89 58 ? 48 89 68 ? 48 89 70 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 44 0F";
-    sign.AddSignCall("E8 ? ? ? ? 40 B7 01 48 85 DB 74 ? 48");
-    if(sign) {
-        MouseHookInstance = HookManager::getInstance()->addHook(*sign, MouseUpdate, "MouseUpdate");
-        MouseHookInstance->hook();
-    }
-    else {
-        GetImguiConsole()->AddLog("[Error] %s", "鼠标事件Hook失败");
-    }
+    //SignCode sign("MouseUpdate");
+    //sign << "48 8B C4 48 89 58 ? 48 89 68 ? 48 89 70 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 44 0F";
+    //sign.AddSignCall("E8 ? ? ? ? 40 B7 01 48 85 DB 74 ? 48");
+    //if(sign) {
+    //    //MouseHookInstance = HookManager::getInstance()->addHook(*sign, MouseUpdate, "MouseUpdate");
+    //    //MouseHookInstance->hook();
+    //}
+    //else {
+    //    GetImguiConsole()->AddLog("[Error] %s", "鼠标事件Hook失败");
+    //}
     FindModules();
+    registerCoreWindowEventHandle();
 }
 
 /**
@@ -169,12 +169,6 @@ void ImGuiRenderLoad() {
  */
 void ImGuiRender() {
     
-    //if(ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Insert)) {
-    //    if((ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightCtrl)) &&
-    //       (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftShift) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightShift)) &&
-    //       (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftAlt) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightAlt)))
-    //            ShowConsole = !ShowConsole;
-    //}
     if(ImGui::IsKeyChordPressed(ImGuiKey_ModCtrl | ImGuiKey::ImGuiKey_Insert))
         ShowConsole = !ShowConsole;
 
@@ -202,40 +196,34 @@ void ImGuiRender() {
     }
 }
 
-static auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
-    static bool onecall = false;
-    if(!onecall) {
-        onecall = true;
-        registerCoreWindowEventHandle();
-    }
-
-    try {
-        if(ImGui::GetCurrentContext() != nullptr) {
-            ImGuiMouseSource mouse_source = GetMouseSourceFromMessageExtraInfo();
-            ImGuiIO& io = ImGui::GetIO();
-            io.AddMouseSourceEvent(mouse_source);
-            switch(mousebutton) {
-            case 1:
-            case 2:
-            case 3:
-                io.AddMouseButtonEvent(mousebutton - 1, isDown);
-                break;
-            case 4:
-                io.AddMouseWheelEvent(0.f, isDown < 0 ? -1.f : 1.f);
-                break;
-            default:
-                io.AddMousePosEvent(mouseX, mouseY);
-                break;
-            }
-            if(/*io.WantCaptureMouse && */io.WantCaptureMouseUnlessPopupClose)
-                return;
-        }
-    }
-    catch(const std::exception& ex) {
-        GetImguiConsole()->AddLog("[Error] %s", std::string(ex.what()).c_str());
-    }
-    MouseHookInstance->oriForSign(MouseUpdate)(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
-}
+//static auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8)->void {
+//    try {
+//        if(ImGui::GetCurrentContext() != nullptr) {
+//            ImGuiMouseSource mouse_source = GetMouseSourceFromMessageExtraInfo();
+//            ImGuiIO& io = ImGui::GetIO();
+//            io.AddMouseSourceEvent(mouse_source);
+//            switch(mousebutton) {
+//            case 1:
+//            case 2:
+//            case 3:
+//                io.AddMouseButtonEvent(mousebutton - 1, isDown);
+//                break;
+//            case 4:
+//                io.AddMouseWheelEvent(0.f, isDown < 0 ? -1.f : 1.f);
+//                break;
+//            default:
+//                io.AddMousePosEvent(mouseX, mouseY);
+//                break;
+//            }
+//            if(/*io.WantCaptureMouse && */io.WantCaptureMouseUnlessPopupClose)
+//                return;
+//        }
+//    }
+//    catch(const std::exception& ex) {
+//        GetImguiConsole()->AddLog("[Error] %s", std::string(ex.what()).c_str());
+//    }
+//    MouseHookInstance->oriForSign(MouseUpdate)(a1, mousebutton, isDown, mouseX, mouseY, relativeMovementX, relativeMovementY, a8);
+//}
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
     switch(ul_reason_for_call) {

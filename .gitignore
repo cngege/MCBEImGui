@@ -11,5 +11,4 @@ vsxmake2022/
 !/CppProperties.json
 
 # font
-src/JNMYT.h
 include/fonts/
