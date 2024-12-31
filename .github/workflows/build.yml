@@ -42,14 +42,14 @@ jobs:
     - run: |
         xmake -v -y
       
-    - name: Upload MCBEImGui
+    - name: Upload MCImRenderer
       uses: actions/upload-artifact@v4
       with:
-        name: ${{env.BUILD_TYPE}}
+        name: ${{env.MODULE_NAME}}
         path: |
-          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.dll
-          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.pdb
-          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.lib
+          ${{github.workspace}}/build/windows/x64/release/${{env.MODULE_NAME}}.dll
+          ${{github.workspace}}/build/windows/x64/release/${{env.MODULE_NAME}}.pdb
+          ${{github.workspace}}/build/windows/x64/release/${{env.MODULE_NAME}}.lib
 
   publish_release:
     name: Publish release
@@ -87,4 +87,4 @@ jobs:
           tag: ${{steps.tag.outputs.tag}}
           bodyFile: "ReleaseBody.md"
           #name: 0
-          artifacts: build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.dll,build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.pdb,build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.lib
+          artifacts: build/download/${{env.MODULE_NAME}}/${{env.MODULE_NAME}}.dll,build/download/${{env.MODULE_NAME}}/${{env.MODULE_NAME}}.pdb,build/download/${{env.MODULE_NAME}}/${{env.MODULE_NAME}}.lib

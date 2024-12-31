@@ -195,7 +195,7 @@ void ImGuiRender() {
                     mod.renderevent(&io, ctx);
                 }
                 catch(std::runtime_error& e) {
-                    GetImguiConsole()->AddLog("[Error][MCBEImGui] 模块渲染调用出现异常 %s", std::string(e.what()).c_str());
+                    GetImguiConsole()->AddLog("[Error][MCImRenderer] 模块渲染调用出现异常 %s", std::string(e.what()).c_str());
                 }
             }
         }
