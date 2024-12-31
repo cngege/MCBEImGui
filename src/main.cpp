@@ -11,7 +11,7 @@
 #include "imgui/imgui_uwp_wndProc.h"
 #include "imgui/appConsole.h"
 #include "fonts/JNMYT.h"
-#include "utils/signcode.h"
+//#include "utils/signcode.h"
 
 // 原理： 此库方法一个接口，其他DLL通过此接口注册一个函数
 // 此库会调用此函数进行渲染
@@ -64,8 +64,8 @@ static std::shared_mutex rw_mtx_moduleList;
  * @brief 是否显示控制台UI
  */
 bool ShowConsole = false;
-auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8) -> void;
-static HookInstance* MouseHookInstance;
+//auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8) -> void;
+//static HookInstance* MouseHookInstance;
 
 void LogPrint(const char* str) {
     GetImguiConsole()->AddLog("%s", str);
