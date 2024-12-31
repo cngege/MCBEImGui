@@ -1,9 +1,12 @@
-name: Xmake Build MCBEImGui.dll
+﻿name: Xmake Build MCImRenderer.dll
 
 on:
   push:
     tags:
       - '*'
+
+env:
+  MODULE_NAME: MCImRenderer
 
 jobs:
   build:
@@ -42,11 +45,11 @@ jobs:
     - name: Upload MCBEImGui
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ github.event.repository.name }}
+        name: ${{env.BUILD_TYPE}}
         path: |
-          ${{github.workspace}}/build/windows/x64/release/${{ github.event.repository.name }}.dll
-          ${{github.workspace}}/build/windows/x64/release/${{ github.event.repository.name }}.pdb
-          ${{github.workspace}}/build/windows/x64/release/${{ github.event.repository.name }}.lib
+          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.dll
+          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.pdb
+          ${{github.workspace}}/build/windows/x64/release/${{env.BUILD_TYPE}}.lib
 
   publish_release:
     name: Publish release
@@ -84,4 +87,4 @@ jobs:
           tag: ${{steps.tag.outputs.tag}}
           bodyFile: "ReleaseBody.md"
           #name: 0
-          artifacts: build/download/${{ github.event.repository.name }}/${{ github.event.repository.name }}.dll,build/download/${{ github.event.repository.name }}/${{ github.event.repository.name }}.pdb,build/download/${{ github.event.repository.name }}/${{ github.event.repository.name }}.lib
+          artifacts: build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.dll,build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.pdb,build/download/${{env.BUILD_TYPE}}/${{env.BUILD_TYPE}}.lib

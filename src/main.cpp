@@ -169,9 +169,15 @@ void ImGuiRenderLoad() {
  */
 void ImGuiRender() {
     
-    if(ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Insert)) {
+    //if(ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Insert)) {
+    //    if((ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightCtrl)) &&
+    //       (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftShift) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightShift)) &&
+    //       (ImGui::IsKeyDown(ImGuiKey::ImGuiKey_LeftAlt) || ImGui::IsKeyDown(ImGuiKey::ImGuiKey_RightAlt)))
+    //            ShowConsole = !ShowConsole;
+    //}
+    if(ImGui::IsKeyChordPressed(ImGuiKey_ModCtrl | ImGuiKey::ImGuiKey_Insert))
         ShowConsole = !ShowConsole;
-    }
+
     if(ShowConsole) GetImguiConsole()->Draw("日志控制台", &ShowConsole);
 
     // 遍历其他模块进行渲染

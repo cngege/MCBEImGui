@@ -1,4 +1,4 @@
-# Xmake cache
+﻿# Xmake cache
 .xmake/
 build/
 
@@ -8,7 +8,7 @@ build/
 # vs project
 .vs/
 vsxmake2022/
-CppProperties.json
+!/CppProperties.json
 
 # font
 src/JNMYT.h

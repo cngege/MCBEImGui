@@ -7,7 +7,7 @@ add_rules("plugin.vsxmake.autoupdate")
 
 add_imports("net.http")
 
-target("MCBEImGui")
+target("MCImRenderer")
     set_kind("shared")
     set_languages("c++20")
     set_runtimes(is_mode("debug") and "MDd" or "MD")
@@ -20,8 +20,10 @@ target("MCBEImGui")
     add_defines("NOMINMAX")
     add_cxflags("/utf-8")
     add_shflags("/NODEFAULTLIB:LIBCMT",{force = true})
+    --pdb
     set_symbols("debug")
     add_packages("hookmanager")
     add_packages("imgui")
     add_includedirs("include")
+    -- WinrtLib
     add_syslinks("onecore")
