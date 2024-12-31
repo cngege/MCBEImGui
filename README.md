@@ -1,4 +1,4 @@
-# MCBEImGui
+﻿# MCBEImGui
 
 
 ### 这是什么？
@@ -15,6 +15,9 @@
 - 此组件被加载后 会寻找主程序下的所有Dll, 并检查其是否导出了 `ImGuiRender` 接口
 - 并保存其导出的函数, 待ImGui渲染时执行
 
+### 当下已经集成此组件的模块
+- https://github.com/cngege/AutoSprint
+- https://github.com/cngege/MCModJScriptLoader
 
 ### 如何集成
 > 项目:`https://github.com/cngege/AutoSprint` 中有完整的例子可供参考
@@ -86,6 +89,12 @@ void LogPrint(const char* fmt, ...) {
         va_end(args);
         ((void(__fastcall*)(const char*))imgui_print)(buffer);
     }
+}
+
+// 当你的模块被卸载时，应当调用此函数
+void onExit(){
+    ModExitTag = true;
+    if(Tag && Id && Tag[0]) Tag[Id] = false;
 }
 
 ```
