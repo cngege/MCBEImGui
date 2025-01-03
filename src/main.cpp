@@ -67,7 +67,7 @@ bool ShowConsole = false;
 //auto MouseUpdate(__int64 a1, char mousebutton, char isDown, __int16 mouseX, __int16 mouseY, __int16 relativeMovementX, __int16 relativeMovementY, char a8) -> void;
 //static HookInstance* MouseHookInstance;
 
-void LogPrint(const char* str) {
+void LogPrint(char* str) {
     GetImguiConsole()->AddLog("%s", str);
 }
 
