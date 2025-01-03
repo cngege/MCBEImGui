@@ -49,7 +49,7 @@ extern "C" __declspec(dllexport) void __stdcall ImGuiRender(ImGuiIO* io, ImGuiCo
 // 此为ImGui用于渲染的接口
 extern "C" __declspec(dllexport) void __stdcall ImGuiRender(ImGuiIO* io, ImGuiContext* ctx) {
     ImGui::SetCurrentContext(ctx);
-    ImGui::GetIO() = *io;
+    memcpy_s(&ImGui::GetIO(), sizeof(ImGuiIO), io, sizeof(ImGuiIO));
 
     if(ImGui::Begin("Window")) {
         ImGui::Text("Hello World")
