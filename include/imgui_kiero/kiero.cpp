@@ -640,8 +640,9 @@ void* kiero::bind2(uint16_t _index, void* _function) {
 
 void kiero::unbind(uint16_t _index) {
     if (g_renderType != RenderType::None) {
-        HookInstance* instance = HookManager::getInstance()->findHookInstance((uintptr_t)g_methodsTable[_index]);
-        if(instance) instance->unhook();
+        HookManager::getInstance()->removeHook((uintptr_t)g_methodsTable[_index]);
+        //HookInstance* instance = HookManager::getInstance()->findHookInstance((uintptr_t)g_methodsTable[_index]);
+        //if(instance) instance->unhook();
     }
 }
 
